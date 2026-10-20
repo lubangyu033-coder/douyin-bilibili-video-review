@@ -4,6 +4,8 @@ A portable local skill for Codex and DeepSeek Harness. It reviews publicly acces
 
 本 Skill 帮助 Codex 从抖音、哔哩哔哩页面提取可复核的内容摘要和资料要点，并记录来源类型、时间点与验证边界。
 
+中文快速说明请看 [中文使用说明](中文使用说明.md)；详细安装步骤请看 [INSTALL.md](INSTALL.md)。
+
 ## Features
 
 - Records page-visible title, creator, date, duration, and access status.
@@ -38,6 +40,7 @@ The skill supplies review instructions only. It does not add a browser, screensh
 
 - `SKILL.md` — shared skill instructions and evidence-handling rules.
 - `INSTALL.md` — installation steps for another Codex environment.
+- `中文使用说明.md` — plain-language Chinese overview, quick start, and capability boundaries.
 - `README.md` — project overview and usage.
 
 To make a standalone GitHub repository, use the contents of this directory as the repository root. Review the selected files and repository visibility before publishing.
