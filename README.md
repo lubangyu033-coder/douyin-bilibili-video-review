@@ -1,51 +1,43 @@
-# Douyin & Bilibili Video Review
+# 抖音与 B 站视频审查 / Douyin & Bilibili Video Review
 
-A portable local skill for Codex and DeepSeek Harness. It reviews publicly accessible Douyin and Bilibili video pages through the browser and media tools available in the current environment.
+用于 Codex 和 DeepSeek Harness 的可移植技能：审查用户给出的视频链接或本地媒体，提取带时间点的资料，并说明画面、字幕、口播各自覆盖到哪里。
 
-本 Skill 帮助 Codex 从抖音、哔哩哔哩页面提取可复核的内容摘要和资料要点，并记录来源类型、时间点与验证边界。
+**v2 补齐了可选本地处理脚本、依赖、参数、模型路径、失败处理和 Harness 配置说明。** 页面审查安装后即可使用现有工具；本地处理需要另行准备 Python 依赖和可选 ASR 模型。
 
-中文快速说明请看 [中文使用说明](中文使用说明.md)；详细安装步骤请看 [INSTALL.md](INSTALL.md)。
+- [中文使用说明](中文使用说明.md)：怎样提问、选择范围、读懂结果。
+- [安装指南](INSTALL.md)：复制位置、目录结构、可选本地依赖。
+- [本地处理与参数](references/local-processing.md)：doctor / check / subs / asr / all。
+- [DeepSeek Harness 配置](references/deepseek-harness.md)：发现目录、优先级、调用开关和近期 Search/Fetch 更新。
+- [能力与验证记录](capabilities.md)：本次验证与 DSH 提供的单机报告边界。
 
-## Features
+## 能做什么
 
-- Records page-visible title, creator, date, duration, and access status.
-- Summarizes content visible in sampled frames and readable captions, with timestamps.
-- Separates creator captions, automatic captions, platform-generated summaries, page text, comments, direct observations, and inference.
-- Flags claims about speed, accuracy, income, acceptance rates, and other outcomes as unverified unless checked against reliable sources.
-- States when audio, captions, or parts of the page could not be reviewed.
+| 当前环境 | 可进行的工作 | 需要说明的边界 |
+|---|---|---|
+| 网页搜索 / Fetch | 页面实际可读的标题、简介、字幕或摘要 | 成功取网页不代表取到视频/音轨 |
+| 浏览器 / 截图 / 媒体预览 | 播放器关键帧、屏幕文字和可访问音频 | 工具、账号、地区、平台都会影响可读范围 |
+| 已准备好的本地 Python 环境 | 媒体探测、候选字幕带、带时间点字幕墙 | 字幕墙不是 OCR，也不证明每条字幕被保留 |
+| 本地 CTranslate2 Whisper 模型 | CPU int8 ASR 与时间段候选 | 转写可能出错，不证明完成画面审查 |
 
-## Requirements and limits
+## 快速开始
 
-The skill uses only browser, computer-control, or media-preview capabilities available to the target Codex or Harness session. Platform access and playback can vary by account, region, browser, and device.
+将仓库内容放进技能根目录下的 douyin-bilibili-video-review 文件夹，确保直接包含 SKILL.md。完整路径见 [安装指南](INSTALL.md)。
 
-It does not download remote videos, bypass login or access controls, or claim a complete review when it only sampled selected timestamps. When the player is muted or audio is unavailable, spoken content is left unverified. A platform-generated chapter summary is labeled as such, not presented as a transcript.
+Codex 可引用 `$douyin-bilibili-video-review`；已启用技能子系统的 Harness 可输入 `/douyin-bilibili-video-review`，随后贴链接并说明希望提取什么。
 
-## Install
+本地工具先运行（将 python 换成已准备好的解释器路径）：
 
-Copy the whole `douyin-bilibili-video-review` directory into one of these locations:
+~~~sh
+python scripts/vread.py doctor
+python scripts/vread.py check "/path/to/video.mp4"
+~~~
 
-- Codex personal skills: `%CODEX_HOME%\skills\` or `%USERPROFILE%\.codex\skills\`
-- Codex project skills: `<project>/.agents/skills/`
-- DeepSeek Harness user skills: `%DSH_HOME%\skills\` or `%USERPROFILE%\.dsh\skills\`; on other supported systems, `~/.dsh/skills/`
+工具只处理现有本地文件，不联网取视频、安装依赖或下载模型。宿主允许且用户授权的媒体获取可使用该环境已有工具；相关权限仍由当前宿主决定。
 
-For detailed steps and macOS/Linux paths, see [INSTALL.md](INSTALL.md).
+## 包含与不包含
 
-## Use
+包含技能指令、可选本地处理源码、依赖声明及说明。未包含用户视频、逐字稿、cookie、API 密钥、Python 环境、模型权重或下载二进制。普通 DeepSeek 网页版/手机 App 不能仅靠复制这些文件获得 Harness 的本地能力。
 
-Provide one or more Douyin or Bilibili links and ask the assistant to inspect the videos and extract the key points. In Codex, invoke `$douyin-bilibili-video-review`; in DeepSeek Harness, invoke `/douyin-bilibili-video-review` when local skills are supported.
+尚未选择许可证；第三方依赖和模型分别受各自许可证约束。
 
-The skill supplies review instructions only. It does not add a browser, screenshot, audio, or video-parsing tool. Results depend on the tools and page access available in that session.
-
-## Repository contents
-
-- `SKILL.md` — shared skill instructions and evidence-handling rules.
-- `INSTALL.md` — installation steps for another Codex environment.
-- `中文使用说明.md` — plain-language Chinese overview, quick start, and capability boundaries.
-- `README.md` — project overview and usage.
-
-To make a standalone GitHub repository, use the contents of this directory as the repository root. Review the selected files and repository visibility before publishing.
-
-## License
-
-No license is included yet. Choose and add a license before publishing if you want to grant reuse rights. Publishing this skill does not grant rights to videos or other third-party material it may review.
-
+A portable review workflow with an optional offline media helper. It records actual evidence coverage instead of assuming every host has the same video tools.
