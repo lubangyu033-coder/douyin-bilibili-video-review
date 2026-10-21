@@ -1,0 +1,10 @@
+.venv/
+venv/
+models/
+outputs/
+work/
+__pycache__/
+*.pyc
+.env
+*.cookies*
+*cookie*.json

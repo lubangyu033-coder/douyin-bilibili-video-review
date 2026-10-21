@@ -1,0 +1,4 @@
+# Python 3.11+; validation status is recorded in capabilities.md.
+av==19.0.1
+numpy>=1.26,<3
+Pillow>=10,<14
